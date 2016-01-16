@@ -24,16 +24,16 @@ all 1's are correct.**
 * Split 50% of genes, create 2 children.
   * First child
     * Take the first 10 bits from survivor #1.
-      * `00100-10100-10010-00100`
+      * `[00100-10100]-10010-00100`
     * Take the last 10 bits from survivor #2.
-      * `0001-10101-00010-01101`
+      * `0001-10101-[00010-01101]`
     * New sequence!
       * `00100-10100-00010-01101`
   * Second child
     * Take the last 10 bits from survivor #1.
-      * `00100-10100-10010-00100`
+      * `00100-10100-[10010-00100]`
     * Take the first 10 bits from survivor #2.
-      * `0001-10101-00010-01101`
+      * `[0001-10101]-00010-01101`
     * New sequence!
       * `00100-10100-00010-01101`
 
@@ -41,8 +41,8 @@ all 1's are correct.**
 **With a mutation probability mutate new offspring at each locus (position in chromosome).**
   1. Children of #1 and #2 have 5% chance one random bit is flipped
     * first child `00100-10100-00010-01101`
-    * `0` `0100-10100-00010-01101` 1st bit mutates
-    * `1` `0100-10100-00010-01101`
+    * `[0]0100-10100-00010-01101` 1st bit mutates
+    * `[1]0100-10100-00010-01101`
 
 ### 7. Accepting
   **Place new offspring in a new population**
