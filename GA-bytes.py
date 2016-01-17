@@ -4,40 +4,42 @@ import numpy
 # used to quit the program once a solution is found
 import sys
 
-world_pop = 0
 
-def fitness_calc():
-    print "fitness_calc"
-    #count 1's in world_pop
-    #divide count by 20 (byte length)
-    # assign fitness score
-    # e.g, [11111-11111-00000-00000] would be fitness of 5/20, or .25
-    #sort dictionary by ascending (?)
-    list.sort()
-    
-def fitness_prune(): 
-    print "fitness_prune"
-    #from world_pop, remove 11-20 from world_pop (bottom 50%)
-    #.slice the fitness_calc array (?)
-    # use NumPy `RESHAPE` instead of slice or percentile?
-
-def chromosome():
+def generate_chromosome():
     print "chromosome"
     # needs to create 1 byte
     # append 0 or 1 randomly 8 times in for loop (?)
+    # e.g. [10100111]
     if random.randint(0,1) == 0:
         return 0
     else:
         return 1
 
-def world_pop_generate():
-    while world_pop < 20:
-        #each member of world pop should be 1 random byte
-        # +1 chromosome to world_pop dictionary?
-        world_pop = world_pop + 1
-        print world_pop
+def generate_species():
+    species_count = 0
+    while species_count < 20:
+        #each member of the species should be 1 random byte
+        # +1 chromosome to species dictionary?
+        species = species + 1
+        print species
     else:
-        print "world_pop at max (20)"
+        print "species at max (20)"
+
+def fitness_calc():
+    print "fitness_calc"
+    #count 1's in species
+    #divide count by 8 (byte length)
+    # assign fitness score
+    # e.g, [10100111] would be fitness of 5/8, or .625
+    #sort dictionary by ascending (?)
+    list.sort()
+    
+def fitness_prune(): 
+    print "fitness_prune"
+    #from species, remove 11-20 from species (bottom 50%)
+    #.slice the fitness_calc array/dict (?)
+    # use NumPy `RESHAPE` instead of slice or percentile?
+
 
 def chromosome_pairs():
     print "chromosome_pairs"
@@ -67,7 +69,7 @@ def crossover_chromosomes():
     print "crossover_genes"
     # with newly created key pairs from remaining world pop
     # generate 2 new children chromosomes from each chromosomes_pair
-        #take world_pop[1] and world_pop[2]
+        #take species[1] and species[2]
             # take first 4 bits from chromosome[1]
                 # append to a new chromosome
             # take first 4 bits from chromosome[2]
@@ -79,15 +81,17 @@ def crossover_chromosomes():
             # take first 4 bits from chromosome[1]
                 # append to a new chromosome
     # run chromosome_mutation()
-    # append new chromosome to world_pop
+    # add new chromosome to species dict
     # repeat for remaining chromosome pair.
 
+
 def check_solution():
-    #if any chromosome in world_pop = 11111111:
+    #if any chromosome in species = 11111111:
         print "solution found!"
         sys.exit("Error message")
     #else:
         print "no solution"
 
+#LOOP! goto fitness calc if no solution found
 
 
