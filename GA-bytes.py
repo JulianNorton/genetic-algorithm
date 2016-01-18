@@ -8,30 +8,31 @@ import sys
 def generate_chromosome():
     print "chromosome"
     # needs to create 1 byte
-    # append 0 or 1 randomly 8 times in for loop (?)
-    # e.g. [10100111]
+    # e.g. [1010-0111]
+    # append 0 or 1 randomly
     if random.randint(0,1) == 0:
         return 0
     else:
         return 1
 
 def generate_species():
+    # 20 times in for loop (?)
     species_count = 0
     while species_count < 20:
         #each member of the species should be 1 random byte
         # +1 chromosome to species dictionary?
-        species = species + 1
-        print species
+        species_count = species_count + 1
+        print species_count
     else:
         print "species at max (20)"
 
 def fitness_calc():
     print "fitness_calc"
-    #count 1's in species
-    #divide count by 8 (byte length)
+    # count 1's in species
+    # divide count by 8 (byte length)
     # assign fitness score
-    # e.g, [10100111] would be fitness of 5/8, or .625
-    #sort dictionary by ascending (?)
+    # e.g, [1010-0111] would be fitness of 5/8, or .625
+    # sort dictionary by ascending (?)
     list.sort()
     
 def fitness_prune(): 
@@ -52,6 +53,27 @@ def chromosome_pairs():
         # take #4 from fitness calc
     # etc..., until 5 pairs.
 
+
+
+def crossover_chromosomes():
+    print "crossover_genes"
+    # with newly created key pairs from remaining world pop
+    # generate 2 new children chromosomes from each chromosomes_pair
+        #take species[1] and species[2]
+            # take first 4 bits from chromosome[1]
+                # append to a new chromosome
+            # take last 4 bits from chromosome[2]
+                # append to a new chromosome
+            #check for chromosome_mutation()
+
+            # take first 4 bits from chromosome[2]
+                # append to a new chromosome
+            # take last 4 bits from chromosome[1]
+                # append to a new chromosome
+    # run chromosome_mutation()
+    # add new chromosome to species_pop dict
+    # repeat for remaining chromosome pair.
+
 def chromosome_mutation():
     # 2% chance to randomly mutate a bit
     if random.randint(0,49) == 0:
@@ -64,27 +86,6 @@ def chromosome_mutation():
     else:
         print "No mutation"
 
-
-def crossover_chromosomes():
-    print "crossover_genes"
-    # with newly created key pairs from remaining world pop
-    # generate 2 new children chromosomes from each chromosomes_pair
-        #take species[1] and species[2]
-            # take first 4 bits from chromosome[1]
-                # append to a new chromosome
-            # take first 4 bits from chromosome[2]
-                # append to a new chromosome
-            #check for chromosome_mutation()
-
-            # take first 4 bits from chromosome[2]
-                # append to a new chromosome
-            # take first 4 bits from chromosome[1]
-                # append to a new chromosome
-    # run chromosome_mutation()
-    # add new chromosome to species dict
-    # repeat for remaining chromosome pair.
-
-
 def check_solution():
     #if any chromosome in species = 11111111:
         print "solution found!"
@@ -93,5 +94,3 @@ def check_solution():
         print "no solution"
 
 #LOOP! goto fitness calc if no solution found
-
-
