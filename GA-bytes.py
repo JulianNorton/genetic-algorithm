@@ -9,7 +9,7 @@ import sys
 byte = ""
 
 def generate_chromosome():
-    print "chromosome"
+    print "chromosome! ##############################################"
     bit_count = 0
     byte = ""
     while bit_count < 8:
@@ -24,19 +24,21 @@ def generate_chromosome():
             #print byte
     else:
         #print "bit count at 8"
-        print "[1] count:"
-        print byte.count('1')
         fitness_score = 0
         fitness_score = float(byte.count('1') / 8.0)
+        print byte
+        print "[1] count:"
+        print byte.count('1')
         print "Fitness score:"
         print fitness_score
+
+generate_chromosome()
 
 ##########################
 # Unfinished notes below #
 ##########################
 
 
-generate_chromosome()
 
 def generate_species():
     # 20 times in for loop (?)
@@ -77,8 +79,6 @@ def chromosome_pairs():
         # take #3 from fitness calc
         # take #4 from fitness calc
     # etc..., until 5 pairs.
-
-
 
 def crossover_chromosomes():
     print "crossover_genes"
