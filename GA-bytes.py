@@ -1,19 +1,42 @@
 # numpy used for random generation and percentile function
-import numpy
+#import numpy as np
+import random
 
 # used to quit the program once a solution is found
 import sys
 
 
+byte = ""
+
 def generate_chromosome():
     print "chromosome"
-    # needs to create 1 byte
-    # e.g. [1010-0111]
-    # append 0 or 1 randomly
-    if random.randint(0,1) == 0:
-        return 0
+    bit_count = 0
+    byte = ""
+    while bit_count < 8:
+        bit_count += 1
+        #print str(bit_count) + " bit count"
+        #print byte + " current byte"
+        if random.randint(0,1) == 0:
+            byte += '0'
+            #print byte
+        else:
+            byte = byte + '1'
+            #print byte
     else:
-        return 1
+        #print "bit count at 8"
+        print "[1] count:"
+        print byte.count('1')
+        fitness_score = 0
+        fitness_score = float(byte.count('1') / 8.0)
+        print "Fitness score:"
+        print fitness_score
+
+##########################
+# Unfinished notes below #
+##########################
+
+
+generate_chromosome()
 
 def generate_species():
     # 20 times in for loop (?)
@@ -25,6 +48,8 @@ def generate_species():
         print species_count
     else:
         print "species at max (20)"
+
+#generate_species()
 
 def fitness_calc():
     print "fitness_calc"
