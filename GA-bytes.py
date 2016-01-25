@@ -2,47 +2,87 @@
 #import numpy as np
 import random
 
-# used to quit the program once a solution is found
-import sys
-
-
-byte = ""
+population = []
+chromosome_length_max = 8.0
+chromosome_length = 0.0
 
 def generate_chromosome():
-    print "chromosome"
-    bit_count = 0
-    byte = ""
-    while bit_count < 8:
-        bit_count += 1
-        #print str(bit_count) + " bit count"
-        #print byte + " current byte"
+    #print "chromosome"
+    chromosome_length = 0
+    gene = ""
+    while chromosome_length < chromosome_length_max:
+        chromosome_length += 1
+        #print str(chromosome_length) + " bit count"
+        #print gene + " current gene"
         if random.randint(0,1) == 0:
-            byte += '0'
-            #print byte
+            gene += '0'
+            #print gene
         else:
-            byte = byte + '1'
-            #print byte
+            gene = gene + '1'
+            #print gene
     else:
         #print "bit count at 8"
-        print "[1] count:"
-        print byte.count('1')
-        fitness_score = 0
-        fitness_score = float(byte.count('1') / 8.0)
-        print "Fitness score:"
-        print fitness_score
+        # print "[1] count:"
+        # print gene.count('1')
+        return gene
+
+
+
+def fitness_calc():
+    fitness_score = 0
+    fitness_score = population[0].count('1') / chromosome_length_max
+    print "Fitness score:"
+    print fitness_score
+    # print fitness_score
+
+
+
+def check_solution():
+    solution_found = False
+    for check_solution in population:
+        if check_solution == '11111111':
+            solution_found = True
+            print "Solution found!",solution_found
+            break
+        #else:
+        # print "no solution found"
+         #   print check_solution
+
+
+population.append(generate_chromosome())
+population.append(generate_chromosome())
+population.append(generate_chromosome())
+population.append(generate_chromosome())
+population.append(generate_chromosome())
+
+#fitness_calc()
+
+# population.sort()
+
+#print population
+
+#{"key2":"I am a string", "new key":"New value", "key1":[1,2,3],123:456}
+
+
+# for string in population:
+    # Your code here
+    # print population
+
+
+#print population
+#check_solution()
 
 ##########################
 # Unfinished notes below #
 ##########################
 
 
-generate_chromosome()
 
 def generate_species():
     # 20 times in for loop (?)
     species_count = 0
     while species_count < 20:
-        #each member of the species should be 1 random byte
+        #each member of the species should be 1 random gene
         # +1 chromosome to species dictionary?
         species_count = species_count + 1
         print species_count
@@ -51,14 +91,17 @@ def generate_species():
 
 #generate_species()
 
-def fitness_calc():
-    print "fitness_calc"
+# y = ['1', '2' ,'3' ,'4' ,'5']
+# print y[2].count('1')
+
+#def fitness_calc():
+    #print "fitness_calc"
     # count 1's in species
-    # divide count by 8 (byte length)
+    # divide count by 8 (gene length)
     # assign fitness score
     # e.g, [1010-0111] would be fitness of 5/8, or .625
     # sort dictionary by ascending (?)
-    list.sort()
+    #list.sort()
     
 def fitness_prune(): 
     print "fitness_prune"
@@ -110,12 +153,5 @@ def chromosome_mutation():
             # else 1 = 0 
     else:
         print "No mutation"
-
-def check_solution():
-    #if any chromosome in species = 11111111:
-        print "solution found!"
-        sys.exit("Error message")
-    #else:
-        print "no solution"
 
 #LOOP! goto fitness calc if no solution found
