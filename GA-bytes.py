@@ -7,6 +7,7 @@ chromosome_length_max = 8.0
 chromosome_length = 0.0
 
 def generate_chromosome():
+<<<<<<< HEAD
     #print "chromosome"
     chromosome_length = 0
     gene = ""
@@ -14,6 +15,15 @@ def generate_chromosome():
         chromosome_length += 1
         #print str(chromosome_length) + " bit count"
         #print gene + " current gene"
+=======
+    print "chromosome! ##############################################"
+    bit_count = 0
+    byte = ""
+    while bit_count < 8:
+        bit_count += 1
+        #print str(bit_count) + " bit count"
+        #print byte + " current byte"
+>>>>>>> origin/master
         if random.randint(0,1) == 0:
             gene += '0'
             #print gene
@@ -22,6 +32,7 @@ def generate_chromosome():
             #print gene
     else:
         #print "bit count at 8"
+<<<<<<< HEAD
         # print "[1] count:"
         # print gene.count('1')
         return gene
@@ -71,6 +82,17 @@ population.append(generate_chromosome())
 
 #print population
 #check_solution()
+=======
+        fitness_score = 0
+        fitness_score = float(byte.count('1') / 8.0)
+        print byte
+        print "[1] count:"
+        print byte.count('1')
+        print "Fitness score:"
+        print fitness_score
+>>>>>>> origin/master
+
+generate_chromosome()
 
 ##########################
 # Unfinished notes below #
@@ -120,8 +142,6 @@ def chromosome_pairs():
         # take #3 from fitness calc
         # take #4 from fitness calc
     # etc..., until 5 pairs.
-
-
 
 def crossover_chromosomes():
     print "crossover_genes"
