@@ -63,6 +63,8 @@ generate_population()
 
 print population
 
+check_solution()
+
 # test = population[0]
 # test1 = population[1]
 # test2 = test[0:4] + test1[4:8]
