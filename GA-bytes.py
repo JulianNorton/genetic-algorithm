@@ -3,6 +3,7 @@
 import random
 
 population = []
+population_count = 0
 chromosome_length_max = 8.0
 chromosome_length = 0.0
 
@@ -49,19 +50,23 @@ def check_solution():
         # print "no solution found"
          #   print check_solution
 
+population.append(generate_chromosome())
 
-population.append(generate_chromosome())
-population.append(generate_chromosome())
-population.append(generate_chromosome())
-population.append(generate_chromosome())
-population.append(generate_chromosome())
+
+def generate_population():
+    population_count = 0
+    while population_count < 8:
+        population_count = population_count + 1
+        population.append(generate_chromosome())
+
+generate_population()
 
 print population
 
-test = population[0]
-test1 = population[1]
-test2 = test[0:4] + test1[4:8]
-print test2
+# test = population[0]
+# test1 = population[1]
+# test2 = test[0:4] + test1[4:8]
+# print test2
 
 #fitness_calc()
 
