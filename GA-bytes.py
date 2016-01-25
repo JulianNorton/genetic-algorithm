@@ -56,6 +56,13 @@ population.append(generate_chromosome())
 population.append(generate_chromosome())
 population.append(generate_chromosome())
 
+print population
+
+test = population[0]
+test1 = population[1]
+test2 = test[0:4] + test1[4:8]
+print test2
+
 #fitness_calc()
 
 # population.sort()
