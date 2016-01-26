@@ -6,6 +6,8 @@ population = []
 population_count = 0
 chromosome_length_max = 8.0
 chromosome_length = 0.0
+generation_count = 0
+solution = '11111111'
 
 def generate_chromosome():
     #print "chromosome"
@@ -40,22 +42,20 @@ def fitness_calc():
 
 
 def check_solution():
-    solution_found = False
-    for check_solution in population:
-        if check_solution == '11111111':
-            solution_found = True
-            print "Solution found!",solution_found
-            break
-        #else:
-        # print "no solution found"
-         #   print check_solution
+    global generation_count
+    global solution
+    if solution in population:
+        print generation_count
+    else:
+        generation_count = generation_count + 1
+        print "no solution"
+        print generation_count
 
-population.append(generate_chromosome())
-
+# population.append(generate_chromosome())
 
 def generate_population():
     population_count = 0
-    while population_count < 8:
+    while population_count < 120:
         population_count = population_count + 1
         population.append(generate_chromosome())
 
