@@ -3,15 +3,89 @@
 import random
 
 population = []
-population_count = 0
-chromosome_length_max = 8.0
-chromosome_length = 0.0
 generation_count = 0
 solution = '11111111'
+
+
+class Individual (object):
+    class Chromosome(object):
+        def __init__(self, length=0, length_max=8):
+            gene = ""
+            while length < length_max:
+                length += 1
+                if random.randint(0,1) == 0:
+                    gene += '0'
+                else:
+                    gene = gene + '1'
+            else:
+                self.gene = gene
+            self.length_max = length_max
+
+    def __init__(self):
+        self.chromosome = self.Chromosome()
+    def calculate_fitness(self):
+        fitness = float(self.chromosome.gene.count('1')) / float(self.chromosome.length_max)
+        # print self.chromosome.gene.count('1')
+        # print self.chromosome.length_max
+        return fitness
+
+class Population(object):
+    def __init__(self, count=0, length_max=20):
+        self.individuals = []
+        population_count = 0
+        while population_count < length_max:
+            population_count = population_count + 1
+            self.individuals.append(Individual())
+    def sort_by_fitness(self):
+        fitnesses = []
+        for individual in self.individuals:
+            fitnesses.append(individual.calculate_fitness())
+        sorted_fitness_and_individuals = sorted(zip(fitnesses, self.individuals))
+        fitness_trash, self.individuals = zip(*sorted_fitness_and_individuals)
+    def dump_individuals(self, count=10):
+        print "dump start"
+        i = 0
+        while i < count:
+            print self.individuals[i].chromosome.gene
+            print self.individuals[i].calculate_fitness()
+            i = i + 1
+            print i, "count #"
+    def kill_some_population(self, count=10):
+        fitnesses = []
+        for individual in self.individuals:
+            fitnesses.append(individual.calculate_fitness())
+        sorted_fitness_and_individuals = sorted(zip(fitnesses, self.individuals))
+        i = 0
+        while i < count:
+            del sorted_fitness_and_individuals[i]
+            i = i + 1
+        fitness_trash, self.individuals = zip(*sorted_fitness_and_individuals)
+
+
+current_population = Population()
+
+current_population.sort_by_fitness()
+
+current_population.dump_individuals(20)
+
+current_population.kill_some_population()
+
+print "########################################################"
+current_population.dump_individuals(10)
+
+# overloading operators
+# print population
+# could just do what dump is doing
+
+
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def generate_chromosome():
     #print "chromosome"
     chromosome_length = 0
+    chromosome_length_max = 8.0
     gene = ""
     while chromosome_length < chromosome_length_max:
         chromosome_length += 1
@@ -30,17 +104,6 @@ def generate_chromosome():
         # print gene.count('1')
         return gene
 
-
-
-def fitness_calc():
-    fitness_score = 0
-    fitness_score = population[0].count('1') / chromosome_length_max
-    print "Fitness score:"
-    print fitness_score
-    # print fitness_score
-
-
-
 def check_solution():
     global generation_count
     global solution
@@ -52,16 +115,16 @@ def check_solution():
         print generation_count, "generation"
 
 
-def generate_population():
-    population_count = 0
-    while population_count < 4:
-        population_count = population_count + 1
-        population.append(generate_chromosome())
+# def generate_population():
+#     population_count = 0
+#     while population_count < 4:
+#         population_count = population_count + 1
+#         population.append(generate_chromosome())
 
-generate_population()
+# generate_population()
 
-print population
-check_solution()
+# print population
+# check_solution()
 
 print ""
 print "----------------------"
@@ -70,31 +133,43 @@ print "----------------------"
 print ""
 
 
-test = generate_chromosome()
-print test[0:4], "|", test[4:8], "|| parent 1"
-test1 = generate_chromosome()
-print test1[0:4], "|", test1[4:8], "|| parent 2"
-# take first 4 digits from parent 1, and last 4 from parent 2
-test2 = test[0:4] + test1[4:8]
-print test2[0:4], "|", test2[4:8], "|| child 1"
-# take first 4 digits from parent 2, and last 4 from parent 1
-test3 = test1[0:4] + test[4:8]
-print test3[0:4], "|", test3[4:8], "|| child 2"
+# test = generate_chromosome()
+# print test[0:4], "|", test[4:8], "|| parent 1"
+# test1 = generate_chromosome()
+# print test1[0:4], "|", test1[4:8], "|| parent 2"
+# # take first 4 digits from parent 1, and last 4 from parent 2
+# test2 = test[0:4] + test1[4:8]
+# print test2[0:4], "|", test2[4:8], "|| child 1"
+# # take first 4 digits from parent 2, and last 4 from parent 1
+# test3 = test1[0:4] + test[4:8]
+# print test3[0:4], "|", test3[4:8], "|| child 2"
 
 
-def gene_mutation():
-    # 2% chance to randomly mutate a bit
-    # if random.randint(0,49) == 0:
-    if random.randint(0,0) == 0:
-        global test3
-        print "Mutation triggered!"
-        print test3
-        test3 = test3[4].replace('0','1')
-        print test3
-    else:
-        print "No mutation"
+# def gene_mutation():
+#     # 2% chance to randomly mutate a bit
+#     # if random.randint(0,49) == 0:
+#     if random.randint(0,0) == 0:
+#         global test3
+#         print "Mutation triggered!"
+#         print test3
+#         test3 = test3[4].replace('0','1')
+#         print test3
+#     else:
+#         print "No mutation"
 
-gene_mutation()
+# gene_mutation()
+
+# my_dict = {
+#     "fitness": [1.0, 0.25, 0.5, 0.75],
+#     "parents": ['1111', '0001', '0011', '0111'],
+# }
+# my_dict["fitness"].sort() 
+# # print my_dict["fitness"]
+
+# my_dict = [
+#     Individual()
+# ]
+
 
 
 
