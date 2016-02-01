@@ -9,7 +9,7 @@ solution = '11111111'
 
 class Individual (object):
     class Chromosome(object):
-        def __init__(self, length=0, length_max=8):
+        def __init__(self, length=0, length_max=20):
             # create a string that's made up of random bits
             gene = ""
             # Append '0' or '1' until max
@@ -73,7 +73,7 @@ current_population.sort_by_fitness()
 # print "########################################################"
 # current_population.dump_individuals(10)
 
-print current_population.individuals[19].chromosome.gene
+print "########################################################"
 gene_length = len(current_population.individuals[0].chromosome.gene)
 print "gene length = ", gene_length
 half_gene_length = gene_length / 2
@@ -81,15 +81,30 @@ print "1/2 gene length = ", half_gene_length
 
 print current_population.individuals[19].chromosome.gene
 print "A1 | 1st half |", current_population.individuals[19].chromosome.gene[0:(half_gene_length)]
+A1 = current_population.individuals[19].chromosome.gene[0:(half_gene_length)]
 print "A2 | 2nd half |", current_population.individuals[19].chromosome.gene[(half_gene_length):]
+A2 = current_population.individuals[19].chromosome.gene[0:(half_gene_length)]
 
 
 print current_population.individuals[18].chromosome.gene
 print "B1 | 1st half |", current_population.individuals[18].chromosome.gene[0:(half_gene_length)]
+B1 = current_population.individuals[18].chromosome.gene[0:(half_gene_length)]
 print "B2 | 2nd half |", current_population.individuals[18].chromosome.gene[(half_gene_length):]
+B2 = current_population.individuals[18].chromosome.gene[0:(half_gene_length)]
 
+child1 = A1 + B2
+print "parent 1 <---->", A1+A2
+print "parent 2 <---->", B1+B2
+print "child  1 <---->", child1
 
+child2 = B1 + A2
+print "child  2 <---->", child2
 
+# print len(current_population.individuals)
+
+x = range(5)
+
+print x
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
