@@ -40,9 +40,11 @@ class Population(object):
         i = 0
         while i < count:
             print self.individuals[i].chromosome.gene
-            print self.individuals[i].calculate_fitness()
+            # print self.individuals[i].calculate_fitness()
             i = i + 1
             # print i, "count #"
+    def reproduction(self):
+        print "test"
     def kill_some_population(self, count=10):
         fitnesses = []
         for individual in self.individuals:
@@ -59,10 +61,29 @@ current_population = Population()
 
 current_population.sort_by_fitness()
 
-current_population.dump_individuals(20)
+# current_population.dump_individuals(20)
 
-# current_population.kill_some_population()
+current_population.kill_some_population()
 # current_population.dump_individuals(10)
+
+# Making a new iterable list to reproduce
+survivors_population = []
+for item in current_population.individuals:
+    survivors_population.append(item.chromosome.gene)
+
+
+for parent_A, parent_B in zip(*[iter(survivors_population)]*2):
+  child_A = parent_A[0:4] + parent_B[4:8]
+  child_B = parent_B[0:4] + parent_A[4:8]
+  survivors_population.extend([child_A, child_B])
+
+
+print "Current pop ==", len(survivors_population)
+
+
+# print current_population.individuals[0].chromosome.gene
+
+
 
 # for i in xrange(0, 11, 2):
 #     print(i)
@@ -91,9 +112,6 @@ current_population.dump_individuals(20)
 
 # # print len(current_population.individuals)
 
-# x = range(5)
-
-# print x
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # overloading operators
