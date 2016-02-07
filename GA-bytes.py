@@ -70,17 +70,18 @@ current_population.kill_some_population()
 def gene_mutation(chromosome):
     chromosome = list(chromosome)
     gene_location = random.randint(0,7)
-    # gene_replacement = random.randint(0,1)
-    gene_replacement = '*****'
+    gene_replacement = random.randint(0,1)
     mutation_chance = random.randint(0,1)
     for i in chromosome[gene_location]:
         if mutation_chance == 0:
             # print 'mutation!', chromosome
             chromosome[gene_location] = str(gene_replacement)
             chromosome = ''.join(chromosome)
-            # print 'after  ||', chromosome
             return chromosome
-# 7=11
+        else:
+            chromosome = ''.join(chromosome)
+            return chromosome
+
 # Making a new iterable list to reproduce
 survivors_population = []
 for individual in current_population.individuals:
