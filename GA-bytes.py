@@ -66,19 +66,40 @@ current_population.sort_by_fitness()
 current_population.kill_some_population()
 # current_population.dump_individuals(10)
 
+# 5% chance to randomly mutate a bit
+def gene_mutation(chromosome):
+    chromosome = list(chromosome)
+    gene_location = random.randint(0,7)
+    # gene_replacement = random.randint(0,1)
+    gene_replacement = '*****'
+    mutation_chance = random.randint(0,1)
+    for i in chromosome[gene_location]:
+        if mutation_chance == 0:
+            # print 'mutation!', chromosome
+            chromosome[gene_location] = str(gene_replacement)
+            chromosome = ''.join(chromosome)
+            # print 'after  ||', chromosome
+            return chromosome
+# 7=11
 # Making a new iterable list to reproduce
 survivors_population = []
-for item in current_population.individuals:
-    survivors_population.append(item.chromosome.gene)
+for individual in current_population.individuals:
+    survivors_population.append(individual.chromosome.gene)
 
+print "Current pop ==", len(survivors_population)
+print survivors_population
+print ''
 
 for parent_A, parent_B in zip(*[iter(survivors_population)]*2):
   child_A = parent_A[0:4] + parent_B[4:8]
+  child_A = gene_mutation(child_A)
   child_B = parent_B[0:4] + parent_A[4:8]
+  # child_B = gene_mutation(child_B)
   survivors_population.extend([child_A, child_B])
 
-
 print "Current pop ==", len(survivors_population)
+print survivors_population
+# print survivors_population
 
 
 # print current_population.individuals[0].chromosome.gene
@@ -118,16 +139,3 @@ print "Current pop ==", len(survivors_population)
 # print population
 # could just do what dump is doing
 
-# def gene_mutation():
-#     # 2% chance to randomly mutate a bit
-#     # if random.randint(0,49) == 0:
-#     if random.randint(0,0) == 0:
-#         global test3
-#         print "Mutation triggered!"
-#         print test3
-#         test3 = test3[4].replace('0','1')
-#         print test3
-#     else:
-#         print "No mutation"
-
-# gene_mutation()
