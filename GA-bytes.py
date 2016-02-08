@@ -1,9 +1,25 @@
 import random
 import sys
 
+### Variables
 current_generations = 0
 solution_found = False
-max_generations = 10000
+max_generations = 1000
+solution = '1111111111111111'
+gene_replacement = random.randint(0,1)
+mutation_chance = random.randint(0,19)
+# Need to make these variables dynamic to the chromosome length
+gene_location = random.randint(0,15)
+def create_survivors_population():
+    # Making a new iterable list to reproduce, else tuples throws an error
+    global survivors_population
+    survivors_population = [] 
+
+def use_survivors_population():
+    return survivors_population
+create_survivors_population()
+
+# Classes & Objects #
 
 class Individual (object):
     class Chromosome(object):
@@ -55,6 +71,9 @@ class Population(object):
             i = i + 1
         fitness_trash, self.individuals = zip(*sorted_fitness_and_individuals)
 
+# Back to simple functions!
+
+# Need to make the splits dynamic to the chromosome length
 def reproduction():
     for parent_A, parent_B in zip(*[iter(survivors_population)]*2):
       child_A = parent_A[0:8] + parent_B[8:16]
@@ -66,9 +85,6 @@ def reproduction():
 # 5% chance to randomly mutate a bit
 def gene_mutation(chromosome):
     chromosome = list(chromosome)
-    gene_location = random.randint(0,15)
-    gene_replacement = random.randint(0,1)
-    mutation_chance = random.randint(0,19)
     for i in chromosome[gene_location]:
         if mutation_chance == 0:
             chromosome[gene_location] = str(gene_replacement)
@@ -80,7 +96,7 @@ def gene_mutation(chromosome):
 
 def solution_checker():
     for i in current_population:
-        if i == '1111111111111111':
+        if i == solution:
             print '******************'
             print '--------------------'
             print 'SOLUTION FOUND! ==', '\'1111111111111111\''
@@ -89,24 +105,20 @@ def solution_checker():
             print '--------------------'
             print '******************'
             sys.exit(0)
-
-def create_survivors_population():
-    # Making a new iterable list to reproduce
-    global survivors_population
-    survivors_population = [] 
-
-def use_survivors_population():
-    return survivors_population
-
-create_survivors_population()
+        else:
+            print 'no solution:'
+            print 'current_generations ==', current_generations
+            print 'current population size ==', len(current_population)
+            print ''
 
 def reproduction_setup():
     use_survivors_population()
     for individual in current_population.individuals:
         survivors_population.append(individual.chromosome.gene)
 
-while solution_found == False and current_generations <= max_generations:
-    print 'current_generations ==', current_generations
+# EXECUTES THE SEARCH!
+# Sloppy, but it works!
+while solution_found == False and current_generations < max_generations:
     current_generations = current_generations + 1
     current_population = Population()
     current_population.sort_by_fitness()
@@ -115,13 +127,8 @@ while solution_found == False and current_generations <= max_generations:
     reproduction()
     current_population = survivors_population
     solution_checker()
-    print len(current_population)
     survivors_population = list()
-
-
-    
-
-
-
-
+    if current_generations == max_generations:
+        print 'final population'
+        print current_population
 
