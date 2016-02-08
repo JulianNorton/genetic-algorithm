@@ -1,11 +1,13 @@
 import random
+import sys
 
-population = []
-generation_count = 0
+current_generations = 0
+solution_found = False
+max_generations = 10000
 
 class Individual (object):
     class Chromosome(object):
-        def __init__(self, length=0, length_max=8):
+        def __init__(self, length=0, length_max=16):
             # create a string that's made up of random bits
             # Append '0' or '1' until max
             gene = ""
@@ -42,9 +44,6 @@ class Population(object):
             print self.individuals[i].chromosome.gene
             # print self.individuals[i].calculate_fitness()
             i = i + 1
-            # print i, "count #"
-    def reproduction(self):
-        print "test"
     def kill_some_population(self, count=10):
         fitnesses = []
         for individual in self.individuals:
@@ -56,25 +55,22 @@ class Population(object):
             i = i + 1
         fitness_trash, self.individuals = zip(*sorted_fitness_and_individuals)
 
-
-current_population = Population()
-
-current_population.sort_by_fitness()
-
-# current_population.dump_individuals(20)
-
-current_population.kill_some_population()
-# current_population.dump_individuals(10)
+def reproduction():
+    for parent_A, parent_B in zip(*[iter(survivors_population)]*2):
+      child_A = parent_A[0:8] + parent_B[8:16]
+      child_A = gene_mutation(child_A)
+      child_B = parent_B[0:8] + parent_A[8:16]
+      child_B = gene_mutation(child_B)
+      survivors_population.extend([child_A, child_B])
 
 # 5% chance to randomly mutate a bit
 def gene_mutation(chromosome):
     chromosome = list(chromosome)
-    gene_location = random.randint(0,7)
+    gene_location = random.randint(0,15)
     gene_replacement = random.randint(0,1)
-    mutation_chance = random.randint(0,1)
+    mutation_chance = random.randint(0,19)
     for i in chromosome[gene_location]:
         if mutation_chance == 0:
-            # print 'mutation!', chromosome
             chromosome[gene_location] = str(gene_replacement)
             chromosome = ''.join(chromosome)
             return chromosome
@@ -82,61 +78,50 @@ def gene_mutation(chromosome):
             chromosome = ''.join(chromosome)
             return chromosome
 
-# Making a new iterable list to reproduce
-survivors_population = []
-for individual in current_population.individuals:
-    survivors_population.append(individual.chromosome.gene)
+def solution_checker():
+    for i in current_population:
+        if i == '1111111111111111':
+            print '******************'
+            print '--------------------'
+            print 'SOLUTION FOUND! ==', '\'1111111111111111\''
+            print 'from generation', current_generations
+            print survivors_population
+            print '--------------------'
+            print '******************'
+            sys.exit(0)
 
-print "Current pop ==", len(survivors_population)
-print survivors_population
-print ''
+def create_survivors_population():
+    # Making a new iterable list to reproduce
+    global survivors_population
+    survivors_population = [] 
 
-for parent_A, parent_B in zip(*[iter(survivors_population)]*2):
-  child_A = parent_A[0:4] + parent_B[4:8]
-  child_A = gene_mutation(child_A)
-  child_B = parent_B[0:4] + parent_A[4:8]
-  # child_B = gene_mutation(child_B)
-  survivors_population.extend([child_A, child_B])
+def use_survivors_population():
+    return survivors_population
 
-print "Current pop ==", len(survivors_population)
-print survivors_population
-# print survivors_population
+create_survivors_population()
 
+def reproduction_setup():
+    use_survivors_population()
+    for individual in current_population.individuals:
+        survivors_population.append(individual.chromosome.gene)
 
-# print current_population.individuals[0].chromosome.gene
-
-
-
-# for i in xrange(0, 11, 2):
-#     print(i)
-# gene_length = len(current_population.individuals[0].chromosome.gene)
-# print "gene length = ", gene_length
-# half_gene_length = gene_length / 2
-# print "1/2 gene length = ", half_gene_length
-
-# print "A1 | 1st half |", current_population.individuals[19].chromosome.gene[0:(half_gene_length)]
-# A1 = current_population.individuals[19].chromosome.gene[0:(half_gene_length)]
-# print "A2 | 2nd half |", current_population.individuals[19].chromosome.gene[(half_gene_length):]
-# A2 = current_population.individuals[19].chromosome.gene[0:(half_gene_length)]
-
-# print "B1 | 1st half |", current_population.individuals[18].chromosome.gene[0:(half_gene_length)]
-# B1 = current_population.individuals[18].chromosome.gene[0:(half_gene_length)]
-# print "B2 | 2nd half |", current_population.individuals[18].chromosome.gene[(half_gene_length):]
-# B2 = current_population.individuals[18].chromosome.gene[0:(half_gene_length)]
-
-# child1 = A1 + B2
-# print "parent 1 <---->", A1+A2
-# print "parent 2 <---->", B1+B2
-# print "child  1 <---->", child1
-
-# child2 = B1 + A2
-# print "child  2 <---->", child2
-
-# # print len(current_population.individuals)
+while solution_found == False and current_generations <= max_generations:
+    print 'current_generations ==', current_generations
+    current_generations = current_generations + 1
+    current_population = Population()
+    current_population.sort_by_fitness()
+    current_population.kill_some_population()
+    reproduction_setup()
+    reproduction()
+    current_population = survivors_population
+    solution_checker()
+    print len(current_population)
+    survivors_population = list()
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# overloading operators
-# print population
-# could just do what dump is doing
+    
+
+
+
+
 
