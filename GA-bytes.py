@@ -4,12 +4,11 @@ import sys
 ### Variables
 current_generations = 0
 solution_found = False
-max_generations = 1000
-solution = '1111111111111111'
+max_generations = 100
+solution = '11111111111111111111111111111111'
 gene_replacement = random.randint(0,1)
-mutation_chance = random.randint(0,19)
+mutation_chance = random.randint(0,24)
 # Need to make these variables dynamic to the chromosome length
-gene_location = random.randint(0,15)
 def create_survivors_population():
     # Making a new iterable list to reproduce, else tuples throws an error
     global survivors_population
@@ -17,28 +16,32 @@ def create_survivors_population():
 
 def use_survivors_population():
     return survivors_population
+
 create_survivors_population()
 
 # Classes & Objects #
 
+
+chromosome_length_max = 32
+
 class Individual (object):
     class Chromosome(object):
-        def __init__(self, length=0, length_max=16):
+        def __init__(self, length=0):
             # create a string that's made up of random bits
             # Append '0' or '1' until max
             gene = ""
-            for i in xrange(length_max):
+            for i in xrange(chromosome_length_max):
                 gene += str(random.randint(0,1))
             else:
                 self.gene = gene
-                self.length_max = length_max
+                self.chromosome_length_max = chromosome_length_max
             # gene += (str(random.randint(0,1))
 
     def __init__(self):
         self.chromosome = self.Chromosome()
     def calculate_fitness(self):
         # Counts the number of '1s' and returns the ratio
-        fitness = float(self.chromosome.gene.count('1')) / float(self.chromosome.length_max)
+        fitness = float(self.chromosome.gene.count('1')) / float(chromosome_length_max)
         return fitness
 
 class Population(object):
@@ -48,10 +51,14 @@ class Population(object):
         while population_count < length_max:
             population_count = population_count + 1
             self.individuals.append(Individual())
-    def sort_by_fitness(self):
+    def sort_by_fitness(self, length_max=20):
         fitnesses = []
+        overall_fitness = 0
         for individual in self.individuals:
             fitnesses.append(individual.calculate_fitness())
+            overall_fitness = overall_fitness + individual.calculate_fitness()
+        overall_fitness = overall_fitness / 20
+        print 'Average fitness ==', overall_fitness
         sorted_fitness_and_individuals = sorted(zip(fitnesses, self.individuals))
         fitness_trash, self.individuals = zip(*sorted_fitness_and_individuals)
     def dump_individuals(self, count=10):
@@ -76,15 +83,16 @@ class Population(object):
 # Need to make the splits dynamic to the chromosome length
 def reproduction():
     for parent_A, parent_B in zip(*[iter(survivors_population)]*2):
-      child_A = parent_A[0:8] + parent_B[8:16]
+      child_A = parent_A[0:(len(parent_A) / 2)] + parent_B[(len(parent_A) / 2):len(parent_B)]
       child_A = gene_mutation(child_A)
-      child_B = parent_B[0:8] + parent_A[8:16]
+      child_B = parent_B[0:(len(parent_B) / 2)] + parent_A[(len(parent_B) / 2):len(parent_A)]
       child_B = gene_mutation(child_B)
       survivors_population.extend([child_A, child_B])
 
-# 5% chance to randomly mutate a bit
+# 5% chance to randomly mutate a bit (though really 2.5%)
 def gene_mutation(chromosome):
     chromosome = list(chromosome)
+    gene_location = random.randint(0,(chromosome_length_max - 1))
     for i in chromosome[gene_location]:
         if mutation_chance == 0:
             chromosome[gene_location] = str(gene_replacement)
@@ -105,11 +113,7 @@ def solution_checker():
             print '--------------------'
             print '******************'
             sys.exit(0)
-        else:
-            print 'no solution:'
-            print 'current_generations ==', current_generations
-            print 'current population size ==', len(current_population)
-            print ''
+
 
 def reproduction_setup():
     use_survivors_population()
@@ -118,17 +122,25 @@ def reproduction_setup():
 
 # EXECUTES THE SEARCH!
 # Sloppy, but it works!
+first_run = False
+
 while solution_found == False and current_generations < max_generations:
-    current_generations = current_generations + 1
-    current_population = Population()
-    current_population.sort_by_fitness()
-    current_population.kill_some_population()
-    reproduction_setup()
-    reproduction()
-    current_population = survivors_population
-    solution_checker()
-    survivors_population = list()
-    if current_generations == max_generations:
-        print 'final population'
-        print current_population
+    if first_run == False:
+        current_population = Population()
+        current_population.sort_by_fitness()
+        first_run = True
+    else:
+        current_generations = current_generations + 1
+        print current_generations, 'current generation'
+        # current_population = Population()
+        current_population.sort_by_fitness()
+        current_population.kill_some_population()
+        reproduction_setup()
+        reproduction()
+        current_population = survivors_population
+        solution_checker()
+        survivors_population = list()
+        if current_generations == max_generations:
+            print 'final population'
+            print current_population
 
