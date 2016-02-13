@@ -1,9 +1,9 @@
 import random
-
+random.seed(1)
 chromosome_length_max = 8
 current_generations = 0
 max_generations = 4
-population_max = 40
+population_max = 4
 population_current = list()
 # solution = '1' * chromosome_length_max
 # gene_replacement = random.randint(0,1)
@@ -24,48 +24,56 @@ def chromosome_fitness(x):
 def population_generate():
   for i in xrange(population_max):
     key = chromosome()
-    value = chromosome_fitness(key)
-    key_value = key, value
-    population_current.append(key_value)
+    chromosome_scored = chromosome_fitness(key), key
+    population_current.append(chromosome_scored)
 
-population_generate()
+def population_sorted():
+  population_current.sort(reverse=True)
 
-print population_current
-
-
-
-
-# population_current = population_current.items()
-# print population_current
-# population_fitness_chromosome = list()
-# for x, y in population_current.items():
-#   population_fitness_chromosome.append( (x,y) )
-# print population_current
-
-# population_current.sort(reverse=True)
-
-# population_current = population_fitness_chromosome
-
-
-
-print 'pop count ==', len(population_current)
-
+def population_status():
+  print population_current
+  print 'pop count ==', len(population_current)
 
 def population_cull():
   i = 0
-  # while i < (population_max / 2):
-  #   # print i
-  #   # print population_current[-1]
-  #   del population_current[-1]
-  #   i = i + 1
+  # population_status()
+  while i < (population_max / 2):
+    # print population_current[-1]
+    del population_current[-1]
+    i = i + 1
 
-# population_cull()
-# print len(population_current)
+def population_reproduction():
+  # population_status()
+  population_survivors = list()
+  for k, v in population_current:
+    population_survivors.append(v)
+  for parent_A, parent_B in zip(*[iter(population_survivors)]*2):
+    # print parent_A, 'parent A'
+    # print parent_B, 'parent B'
+    child_A = parent_A[0:4] + parent_B[4:8]
+    # child_A = gene_mutation(child_A)
+    chromosome_scored = chromosome_fitness(child_A), child_A
+    population_current.append(chromosome_scored)
+    child_B = parent_B[0:4] + parent_A[4:8]
+    # child_B = gene_mutation(child_B)
+    chromosome_scored = chromosome_fitness(child_B), child_B
+    population_current.append(chromosome_scored)
 
-# while i < (population_max / 2):
-  # print sorted_fitness_and_individuals[i]
-  # del sorted_fitness_and_individuals[i]
-  # i = i + 1
-# print population_current
+def population_fitness_average():
+  fitness_list = list()
+  for k, v in population_current:
+    fitness_list.append(k)
+  print fitness_list
+  print sum(fitness_list) / len(fitness_list)
+  print 'test'
+
+  # print 'survivors', population_survivors
+
+population_generate()
+population_fitness_average()
+population_sorted()
+population_cull()
+# population_reproduction()
+# population_sorted()
 
 
