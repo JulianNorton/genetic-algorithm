@@ -5,11 +5,11 @@ current_generations = 0
 max_generations = 4
 population_current = list()
 population_count = 0
-population_max = 32
-solution = '1' * chromosome_length_max
-gene_replacement = random.randint(0,1)
-mutation_chance = random.randint(0,24)
-solution_found = False
+population_max = 4
+# solution = '1' * chromosome_length_max
+# gene_replacement = random.randint(0,1)
+# mutation_chance = random.randint(0,24)
+# solution_found = False
 
 def chromosome():
   gene = ""
