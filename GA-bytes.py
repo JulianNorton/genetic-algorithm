@@ -5,19 +5,17 @@ import sys
 
 # random.seed(1)
 
-chromosome_length_max = 64
-
-max_generations = 100000
-
-population_max = 1024
-population_current = list()
-
-mutation_chance = random.randint(0,1) # 10%
-gene_replacement = random.randint(0,1)
-gene_replacement = '1'
-
+chromosome_length_max = 4096
 
 solution = '1' * chromosome_length_max
+
+max_generations = 10000
+
+population_max = 512
+
+# Used a few places, so just defining it globally
+population_current = list()
+
 ################################################################
 
 def chromosome():
@@ -30,7 +28,6 @@ def chromosome_fitness(x):
   chromosome_fitness = float(x.count('1')) / float(chromosome_length_max)
   return chromosome_fitness
 
-# test = list()
 def population_generate():
   for i in xrange(population_max):
     key = chromosome()
@@ -53,6 +50,9 @@ def population_cull():
 
 
 def chromosome_mutation(chromosome):
+    # 10%, but in practice it's 5% because mutation can be identical to previous value.
+    gene_replacement = random.randint(0,1)
+    mutation_chance = random.randint(0,9)
     chromosome = list(chromosome)
     gene_location = random.randint(0,(chromosome_length_max - 1))
     if mutation_chance == 0:
@@ -68,28 +68,45 @@ def population_reproduction():
   for k, v in population_current:
     population_survivors.append(v)
   for parent_A, parent_B in zip(*[iter(population_survivors)]*2):
-    child_A = parent_A[:(chromosome_length_max/2)] + parent_B[(chromosome_length_max/2):chromosome_length_max]
+    child_A = list()
+    child_B = list()
+    # randomy select which gene to take from parent
+    for i in xrange(len(parent_A)):
+      if random.randint(0,1) == 0:
+        child_A += str(parent_A[i])
+      else:
+        child_A += str(parent_B[i])
+
+    for i in xrange(len(parent_B)):
+      if random.randint(0,1) == 0:
+        child_B += str(parent_A[i])
+      else:
+        child_B += str(parent_B[i])
+
+    child_A = ''.join(child_A)
+    child_B = ''.join(child_B)
+
     child_A = chromosome_mutation(child_A)
+    child_B = chromosome_mutation(child_B)
+
     chromosome_scored = chromosome_fitness(child_A), child_A
     population_current.append(chromosome_scored)
-    child_B = parent_B[:(chromosome_length_max/2)] + parent_A[(chromosome_length_max/2):chromosome_length_max]
-    child_B = chromosome_mutation(child_B)
+
     chromosome_scored = chromosome_fitness(child_B), child_B
     population_current.append(chromosome_scored)
 
 def population_fitness_average():
   fitness_list = list()
+  top_fitness = 0
   for k, v in population_current:
     fitness_list.append(k)
-  # print 'Fitness list:', fitness_list
-  print 'Average Fit ==', sum(fitness_list) / len(fitness_list)
-  # print 'test'
-
-  # print 'survivors', population_survivors
+    if top_fitness < k:
+      top_fitness = k
+  print 'Top generation fitness ==', top_fitness
+  print 'Average Fitness ==', sum(fitness_list) / len(fitness_list)
 
 def solution_checker():
   for k, v in population_current:
-    # print v
     if v == solution:
       population_status()
       population_fitness_average()
