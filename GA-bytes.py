@@ -5,13 +5,13 @@ import sys
 
 # random.seed(1)
 
-chromosome_length_max = 256
+chromosome_length_max = 512
 
 solution = '1' * chromosome_length_max
 
-max_generations = 1024
+max_generations = 2**14
 
-population_max = 256
+population_max = 16
 
 # Used a few places, so just defining it globally
 population_current = list()
@@ -131,7 +131,6 @@ def epoch_generate():
     population_fitness_average()
     print 'Generation count ==', i
   # population_status()
-  print 'Generation count =='
-
+    print 'no solution found'
 epoch_generate()
 
