@@ -5,13 +5,13 @@ import sys
 
 # random.seed(1)
 
-chromosome_length_max = 256
+chromosome_length_max = 128
 
 solution = '1' * chromosome_length_max
 
 max_generations = 10000
 
-population_max = 256
+population_max = 64
 
 # Used a few places, so just defining it globally
 population_current = list()
@@ -67,85 +67,90 @@ def population_reproduction():
   population_survivors = list()
   for k, v in population_current:
     population_survivors.append(v)
-  for parent_A, parent_B in zip(*[iter(population_survivors)]*2):
-    child_A = list()
-    child_B = list()
+  for parent_a, parent_b in zip(*[iter(population_survivors)]*2):
+    child_a = list()
+    child_b = list()
     # randomy select which gene to take from parent
-    for i in xrange(len(parent_A)):
+    for i in xrange(len(parent_a)):
       if random.randint(0,1) == 0:
-        child_A += str(parent_A[i])
+        child_a += str(parent_a[i])
       else:
-        child_A += str(parent_B[i])
+        child_a += str(parent_b[i])
 
-    for i in xrange(len(parent_B)):
+    for i in xrange(len(parent_b)):
       if random.randint(0,1) == 0:
-        child_B += str(parent_A[i])
+        child_b += str(parent_a[i])
       else:
-        child_B += str(parent_B[i])
+        child_b += str(parent_b[i])
 
-    child_A = ''.join(child_A)
-    child_B = ''.join(child_B)
+    child_a = ''.join(child_a)
+    child_b = ''.join(child_b)
 
-    child_A = chromosome_mutation(child_A)
-    child_B = chromosome_mutation(child_B)
+    child_a = chromosome_mutation(child_a)
+    child_b = chromosome_mutation(child_b)
 
-    chromosome_scored = chromosome_fitness(child_A), child_A
+    chromosome_scored = chromosome_fitness(child_a), child_a
     population_current.append(chromosome_scored)
 
-    chromosome_scored = chromosome_fitness(child_B), child_B
+    chromosome_scored = chromosome_fitness(child_b), child_b
     population_current.append(chromosome_scored)
 
 def population_reproduction_zipper():
   population_survivors = list()
   for k, v in population_current:
     population_survivors.append(v)
-  # 'Zipper' style, e.g. child_A == 'ABAB', child_B = 'BABA'
-  for parent_A, parent_B in zip(*[iter(population_survivors)]*2):
-    child_A = list()
-    child_B = list()
-    for i in xrange(len(parent_A) / 2):
-      child_A += parent_A[i] + parent_B[i]
-      child_B += parent_B[i] + parent_A[i]
+  # 'Zipper' style, e.g. child_a == 'ABAB', child_b = 'BABA'
+  for parent_a, parent_b in zip(*[iter(population_survivors)]*2):
+    child_a = list()
+    child_b = list()
+    for i in xrange(len(parent_a) / 2):
+      child_a += parent_a[i] + parent_b[i]
+      child_b += parent_b[i] + parent_a[i]
 
-    child_A = ''.join(child_A)
-    child_B = ''.join(child_B)
+    child_a = ''.join(child_a)
+    child_b = ''.join(child_b)
 
-    child_A = chromosome_mutation(child_A)
-    child_B = chromosome_mutation(child_B)
+    child_a = chromosome_mutation(child_a)
+    child_b = chromosome_mutation(child_b)
 
-    chromosome_scored = chromosome_fitness(child_A), child_A
+    chromosome_scored = chromosome_fitness(child_a), child_a
     population_current.append(chromosome_scored)
 
-    chromosome_scored = chromosome_fitness(child_B), child_B
+    chromosome_scored = chromosome_fitness(child_b), child_b
     population_current.append(chromosome_scored)
 
 def population_reproduction_zipper_b():
   population_survivors = list()
   for k, v in population_current:
     population_survivors.append(v)
-  # 'Zipper' style, e.g. child_A == 'ABAB', child_B = 'BABA'
-  for parent_A, parent_B in zip(*[iter(population_survivors)]*2):
-    child_A = list()
-    child_B = list()
-    for i in xrange(len(parent_A)):
+  # Pairing the top parents together. e.g. (A,B), (C,D)
+  for parent_a, parent_b in zip(*[iter(population_survivors)]*2):
+    # Setting it up
+    child_a = list()
+    child_b = list()
+    # Child_a, 'Wild'! Randomly selects from either parent for every gene
+    for i in xrange(len(parent_a)):
       if random.randint(0,1) == 0:
-        child_A += str(parent_A[i])
+        child_a += str(parent_a[i])
       else:
-        child_A += str(parent_B[i])
+        child_a += str(parent_b[i])
 
-    for i in xrange(len(parent_B) / 2):
-      child_B += parent_A[i] + parent_B[i]
+    # Child_b 'Zipper'! e.g. child_a == 'ABAB', child_b = 'BABA'
+    for i in xrange(len(parent_b) / 2):
+      child_b += parent_a[i] + parent_b[i]
+    # Converting the children lists back to strings
+    child_a = ''.join(child_a)
+    child_b = ''.join(child_b)
+    # Randomly mutate each child
+    child_a = chromosome_mutation(child_a)
+    child_b = chromosome_mutation(child_b)
 
-    child_A = ''.join(child_A)
-    child_B = ''.join(child_B)
-
-    child_A = chromosome_mutation(child_A)
-    child_B = chromosome_mutation(child_B)
-
-    chromosome_scored = chromosome_fitness(child_A), child_A
+    # Adding a fitness score to child A
+    chromosome_scored = chromosome_fitness(child_a), child_a
+    # Inserting child A into the population
     population_current.append(chromosome_scored)
-
-    chromosome_scored = chromosome_fitness(child_B), child_B
+    # Same thing for child B
+    chromosome_scored = chromosome_fitness(child_b), child_b
     population_current.append(chromosome_scored)
 
 def population_fitness_average():
