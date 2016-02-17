@@ -5,13 +5,13 @@ import sys
 
 # random.seed(1)
 
-chromosome_length_max = 8
+chromosome_length_max = 256
 
 solution = '1' * chromosome_length_max
 
-max_generations = 2
+max_generations = 10000
 
-population_max = 4
+population_max = 256
 
 # Used a few places, so just defining it globally
 population_current = list()
@@ -99,27 +99,48 @@ def population_reproduction_zipper():
   population_survivors = list()
   for k, v in population_current:
     population_survivors.append(v)
+  # 'Zipper' style, e.g. child_A == 'ABAB', child_B = 'BABA'
   for parent_A, parent_B in zip(*[iter(population_survivors)]*2):
-    parent_A = 'AAAAAAAA'
-    parent_B = 'BBBBBBBB'
     child_A = list()
     child_B = list()
-    # 'Zipper' style, e.g. child_A == 'ABAB', child_B = 'BABA'
-    print parent_A, 'Parent A'
-    print parent_B, 'Parent B'
     for i in xrange(len(parent_A) / 2):
       child_A += parent_A[i] + parent_B[i]
       child_B += parent_B[i] + parent_A[i]
-    print child_A , len(child_A)
-    print child_B
 
     child_A = ''.join(child_A)
     child_B = ''.join(child_B)
 
     child_A = chromosome_mutation(child_A)
     child_B = chromosome_mutation(child_B)
-    print child_A
-    print child_B
+
+    chromosome_scored = chromosome_fitness(child_A), child_A
+    population_current.append(chromosome_scored)
+
+    chromosome_scored = chromosome_fitness(child_B), child_B
+    population_current.append(chromosome_scored)
+
+def population_reproduction_zipper_b():
+  population_survivors = list()
+  for k, v in population_current:
+    population_survivors.append(v)
+  # 'Zipper' style, e.g. child_A == 'ABAB', child_B = 'BABA'
+  for parent_A, parent_B in zip(*[iter(population_survivors)]*2):
+    child_A = list()
+    child_B = list()
+    for i in xrange(len(parent_A)):
+      if random.randint(0,1) == 0:
+        child_A += str(parent_A[i])
+      else:
+        child_A += str(parent_B[i])
+
+    for i in xrange(len(parent_B) / 2):
+      child_B += parent_A[i] + parent_B[i]
+
+    child_A = ''.join(child_A)
+    child_B = ''.join(child_B)
+
+    child_A = chromosome_mutation(child_A)
+    child_B = chromosome_mutation(child_B)
 
     chromosome_scored = chromosome_fitness(child_A), child_A
     population_current.append(chromosome_scored)
@@ -151,7 +172,9 @@ def solution_checker():
 
 def generation_iterate():
     population_cull()
-    population_reproduction_zipper()
+    # population_reproduction()
+    # population_reproduction_zipper()
+    population_reproduction_zipper_b()
     population_sorted()
     solution_checker()
 
@@ -160,8 +183,8 @@ def epoch_generate():
   population_sorted()
   for i in xrange(max_generations):
     generation_iterate()
-    # population_fitness_average()
-    # print 'Generation count ==', i
+    population_fitness_average()
+    print 'Generation count ==', i
     # population_status()
     # print 'no solution found'
 epoch_generate()
