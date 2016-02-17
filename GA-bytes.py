@@ -135,7 +135,7 @@ def population_reproduction_zipper_b():
       else:
         child_a += str(parent_b[i])
 
-    # Child_b 'Zipper'! e.g. child_a == 'ABAB', child_b = 'BABA'
+    # Child_b 'Zipper'! e.g. child_b = 'BABA…'
     for i in xrange(len(parent_b) / 2):
       child_b += parent_a[i] + parent_b[i]
     # Converting the children lists back to strings
