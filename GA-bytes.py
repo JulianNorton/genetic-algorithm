@@ -5,7 +5,7 @@ import sys
 
 # random.seed(1)
 
-chromosome_length_max = 128
+chromosome_length_max = 1024
 
 solution = '1' * chromosome_length_max
 
@@ -125,7 +125,7 @@ def population_reproduction_zipper_b():
     population_survivors.append(v)
   # Pairing the top parents together. e.g. (A,B), (C,D)
   for parent_a, parent_b in zip(*[iter(population_survivors)]*2):
-    # Setting it up
+    # Creating empty lists to append to
     child_a = list()
     child_b = list()
     # Child_a, 'Wild'! Randomly selects from either parent for every gene
@@ -135,7 +135,7 @@ def population_reproduction_zipper_b():
       else:
         child_a += str(parent_b[i])
 
-    # Child_b 'Zipper'! e.g. child_b = 'BABA…'
+    # Child_b 'Zipper'! e.g. child_b = 'BABA . . .'
     for i in xrange(len(parent_b) / 2):
       child_b += parent_a[i] + parent_b[i]
     # Converting the children lists back to strings
