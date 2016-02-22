@@ -5,13 +5,15 @@ import sys
 
 # random.seed(1)
 
-chromosome_length_max = 512
+chromosome_length_max = 16
 
 solution = '1' * chromosome_length_max
 
-max_generations = 10000
+max_generations = 2
 
-population_max = 12
+population_max = 8
+
+epoch_runs = 2
 
 # Used a few places, so just defining it globally
 population_current = list()
@@ -39,7 +41,6 @@ def population_sorted():
 
 def population_status():
     print population_current
-    # print len(population_current)
     print 'pop count ==', len(population_current)
 
 def population_cull():
@@ -56,11 +57,8 @@ def chromosome_mutation(chromosome):
     gene_location = random.randint(0,(chromosome_length_max - 1))
     if mutation_chance == 0:
         chromosome[gene_location] = str(gene_replacement)
-        chromosome = ''.join(chromosome)
-        return chromosome
-    else:
-        chromosome = ''.join(chromosome)
-        return chromosome
+    chromosome = ''.join(chromosome)
+    return chromosome
 
 def population_reproduction():
     population_survivors = list()
@@ -125,8 +123,7 @@ def population_reproduction_zipper_b():
     # Pairing the top parents together. e.g. (A,B), (C,D)
     for parent_a, parent_b in zip(*[iter(population_survivors)]*2):
         # Creating empty lists to append to
-        child_a = list()
-        child_b = list()
+        child_a, child_b = [], []
         # Child_a, 'Wild'! Randomly selects from either parent for every gene
         for i in xrange(len(parent_a)):
             if random.randint(0,1) == 0:
@@ -138,33 +135,27 @@ def population_reproduction_zipper_b():
         for i in xrange(len(parent_b) / 2):
             child_b += parent_a[i] + parent_b[i]
         # Converting the children lists back to strings
-        child_a = ''.join(child_a)
-        child_b = ''.join(child_b)
         # Randomly mutate each child
-        child_a = chromosome_mutation(child_a)
-        child_b = chromosome_mutation(child_b)
-
+        child_a, child_b = chromosome_mutation(''.join(child_a)), chromosome_mutation(''.join(child_b))
         # Adding a fitness score to child A
-        chromosome_scored = chromosome_fitness(child_a), child_a
         # Inserting child A into the population
-        population_current.append(chromosome_scored)
+        population_current.append((chromosome_fitness(child_a), child_a))
         # Same thing for child B
-        chromosome_scored = chromosome_fitness(child_b), child_b
-        population_current.append(chromosome_scored)
+        population_current.append((chromosome_fitness(child_b), child_b))
 
 def population_fitness_average():
     fitness_list = list()
     top_fitness = 0
-    for k, v in population_current:
-        fitness_list.append(k)
-        if top_fitness < k:
-            top_fitness = k
+    for fitness, individual in population_current:
+        fitness_list.append(fitness)
+        if top_fitness < fitness:
+            top_fitness = fitness
     print 'Top generation fitness ==', top_fitness
     print 'Average Fitness ==', sum(fitness_list) / len(fitness_list)
 
 def solution_checker():
-    for k, v in population_current:
-        if v == solution:
+    for fitness, individual in population_current:
+        if individual == solution:
             # population_status()
             population_fitness_average()
             print '******************'
@@ -172,25 +163,30 @@ def solution_checker():
             print 'SOLUTION FOUND!'
             print '--------------------'
             print '******************'
-            sys.exit(0)
 
 def generation_iterate():
-    population_cull()
-    # population_reproduction()
-    # population_reproduction_zipper()
-    population_reproduction_zipper_b()
     population_sorted()
+    population_cull()
+    population_reproduction_zipper_b()
     solution_checker()
 
-def epoch_generate():
+def epoch_generate(x):
+    population_current = list()
     population_generate()
-    population_sorted()
-    for i in xrange(max_generations):
-        generation_iterate()
-        population_fitness_average()
-        print 'Generation count ==', i
+    for i in xrange(x):
+        print '******************'
+        print '--------------------'
+        print 'Beginning new epoch'
+        print '--------------------'
+        print '******************'
+        for i in xrange(max_generations):
+            generation_iterate()
+            population_fitness_average()
+            print 'Generation count ==', i
         # population_status()
         # print 'no solution found'
+    sys.exit(0)
 
-epoch_generate()
+
+epoch_generate(epoch_runs)
 
