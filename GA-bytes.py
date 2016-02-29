@@ -17,6 +17,7 @@ epoch_runs = 2
 
 # Used a few places, so just defining it globally
 population_current = list()
+solution_found = False
 
 ################################################################
 
@@ -157,20 +158,23 @@ def solution_checker():
     for fitness, individual in population_current:
         if individual == solution:
             # population_status()
-            population_fitness_average()
-            print '******************'
-            print '--------------------'
+            # print '******************'
+            # print '--------------------'
             print 'SOLUTION FOUND!'
-            print '--------------------'
-            print '******************'
+            # print '--------------------'
+            # print '******************'
+            solution_found = True
+            print 'solution found true'
 
 def generation_iterate():
     population_sorted()
     population_cull()
     population_reproduction_zipper_b()
+    population_fitness_average()
+
     solution_checker()
 
-def epoch_generate(x):
+def epoch_generate():
     population_current = list()
     population_generate()
     for i in xrange(x):
@@ -183,10 +187,55 @@ def epoch_generate(x):
             generation_iterate()
             population_fitness_average()
             print 'Generation count ==', i
+
         # population_status()
         # print 'no solution found'
-    sys.exit(0)
+    # sys.exit(0)
 
 
-epoch_generate(epoch_runs)
+epoch_generate()
+
+
+
+
+
+
+
+
+
+
+
+
+
+do epoch run
+    start new generation
+    if solution is found:
+        generation_average.append(current_generation)
+        continue
+    run generations
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
