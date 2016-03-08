@@ -5,15 +5,15 @@ import sys
 
 # random.seed(1)
 
-chromosome_length_max = 1024
+chromosome_length_max = 256
 
 solution = '1' * chromosome_length_max
 
 max_generations = 10000
 
-population_max = 64
+population_max = 32
 
-epoch_runs = 1024
+epoch_runs = 99
 
 # Used a few places, so just defining it globally
 population_current = list()
