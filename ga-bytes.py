@@ -175,16 +175,13 @@ def epoch_generate():
     solution_memory = list()
     population_current = list()
     population_generate()
-    for i in xrange(epoch_runs):
-        print '--------------------'
-        print i, 'epoch'
-        print '--------------------'
+    for epoch in xrange(epoch_runs):
         population_current = list()
         population_generate()
         solution_checker() == False
         for current_generation in xrange(max_generations):
             generation_iterate()
-            print 'Generation count ==', current_generation
+            print 'Generation count ==', current_generation, '|| epoch ==', epoch, 'of', epoch_runs
             if solution_checker() == True:
                 solution_memory.append(current_generation)
                 break
